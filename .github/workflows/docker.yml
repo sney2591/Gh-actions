@@ -4,19 +4,20 @@ on: push
 
 env:
     CONTAINER_REGISTRY: docker.io
-    DOCKER_USERNAME:
+    DOCKER_USERNAME: koolkaramel
     IMAGE_NAME: github-actions-nginx
+    DOCKER_PASSWORD: Sneha@6133
 
 jobs:
-    
+
     docker:
         runs-on: ubuntu-latest
         steps:
             - name: docker build
-              run: docker build -t $CONTAINER_REGISTRY/$DOCKER_USERNAME/$IMAGE_NAME:latest
+              run: echo docker build -t $CONTAINER_REGISTRY/$DOCKER_USERNAME/$IMAGE_NAME:latest
 
             - name: Docker login
-              run: docker login --username=DOCKER_USERNAME --password=securePassword
+              run: docker login --username=DOCKER_USERNAME --password=$DOCKER_PASSWORD
 
             - name: docker publish
               run: docker push $CONTAINER_REGISTRY/$DOCKER_USERNAME/$IMAGE_NAME:latest
