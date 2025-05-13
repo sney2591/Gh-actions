@@ -17,7 +17,7 @@ jobs:
               run: echo docker build -t $CONTAINER_REGISTRY/$DOCKER_USERNAME/$IMAGE_NAME:latest
 
             - name: Docker login
-              run: docker login --username=DOCKER_USERNAME --password=$DOCKER_PASSWORD
+              run: docker login --username=$DOCKER_USERNAME --password=$DOCKER_PASSWORD
 
             - name: docker publish
               run: docker push $CONTAINER_REGISTRY/$DOCKER_USERNAME/$IMAGE_NAME:latest
