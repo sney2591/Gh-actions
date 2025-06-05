@@ -5,7 +5,7 @@ on: push
 env:
     CONTAINER_REGISTRY: docker.io
     DOCKER_USERNAME: koolkaramel
-    IMAGE_NAME: github-actions-nginx
+    IMAGE_NAME: github-actions-nginx-sneha
 
 jobs:
 
