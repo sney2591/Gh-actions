@@ -18,7 +18,7 @@ jobs:
               run: ls -R
 
             - name: docker build
-              run: docker build -t ${{env.CONTAINER_REGISTRY}}/$DOCKER_USERNAME/$IMAGE_NAME:latest .
+              run: docker build .
 
             - name: Docker login
               run: docker login --username=$DOCKER_USERNAME --password=${{secrets.DOCKER_PASSWORD}}
