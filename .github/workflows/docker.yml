@@ -3,33 +3,32 @@ name: exploring variables and secrets
 on: push
 
 env:
-    CONTAINER_REGISTRY: docker.io
+  CONTAINER_REGISTRY: docker.io
+  DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
+  IMAGE_NAME: ${{ vars.IMAGE_NAME }}
 
 jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    docker:
-        runs-on: ubuntu-latest
-        steps:
+      - name: Show contents
+        run: ls -R
 
-            - name: Checkout repository
-              uses: actions/checkout@v3
+      - name: Docker build
+        run: docker build -t $CONTAINER_REGISTRY/$DOCKER_USERNAME/$IMAGE_NAME:latest .
 
-            - name: show contents
-              run: ls -R
+      - name: Docker login
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ env.DOCKER_USERNAME }}" --password-stdin
 
-            - name: docker build
-              run: docker build .
+      - name: Docker publish
+        run: docker push $CONTAINER_REGISTRY/$DOCKER_USERNAME/$IMAGE_NAME:latest
 
-            - name: Docker login
-              run: docker login --username=$DOCKER_USERNAME --password=${{secrets.DOCKER_PASSWORD}}
-
-            - name: docker publish
-              run: docker push $CONTAINER_REGISTRY/$DOCKER_USERNAME/$IMAGE_NAME:latest
-
-
-    deploy:
-        needs: docker
-        runs-on: ubuntu-latest
-        steps:
-            - name: docker run
-              run: docker run -d -p 8080:80 $CONTAINER_REGISTRY/$DOCKER_USERNAME/$IMAGE_NAME:latest
+  deploy:
+    needs: docker
+    runs-on: ubuntu-latest
+    steps:
+      - name: Docker run
+        run: docker run -d -p 8080:80 $CONTAINER_REGISTRY/$DOCKER_USERNAME/$IMAGE_NAME:latest
